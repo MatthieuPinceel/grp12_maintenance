@@ -43,6 +43,8 @@ import galleryDisplay from '@/components/components/gallery/galleryDisplay.vue';
 }
 
 .home-container {
+  margin-top: 150px;
+  margin-bottom: 150px;
   display: table-column;
 }
 
