@@ -12,6 +12,17 @@ a,
   padding: 3px;
 }
 
+.separation-bar {
+  width: 50%;              
+  height: 3px; 
+  margin: 10px auto;
+  border-radius: 3px;
+  
+  background: linear-gradient(90deg, #000000, #343434);
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 @media (min-width: 1024px) {
   body {
     display: flex;
@@ -19,7 +30,6 @@ a,
   }
 
   #app {
-    display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
