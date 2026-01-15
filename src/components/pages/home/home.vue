@@ -1,6 +1,6 @@
 <script setup>
 import imageViewer from '@/components/components/imageViewer/imageViewer.vue';
-import photo from '@/components/components/gallery/photo.vue';
+import galleryDisplay from '@/components/components/gallery/galleryDisplay.vue';
 </script>
 
 <template>
@@ -25,7 +25,10 @@ import photo from '@/components/components/gallery/photo.vue';
 
     <div class="separation-bar"></div>
 
-    <photo />
+    <div class="home-gallery-container">
+      <galleryDisplay />
+    </div>
+    
   </div>
   
 
@@ -33,6 +36,12 @@ import photo from '@/components/components/gallery/photo.vue';
 </template>
 
 <style scoped>
+.home-gallery-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
 .home-container {
   display: table-column;
 }
