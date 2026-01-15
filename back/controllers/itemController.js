@@ -19,10 +19,16 @@ export const createItem = (req, res) => {
 
 // READ ALL ITEMS
 export const getAllItems = (req, res) => {
-    db.query("SELECT * FROM ItemTable", (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json(result);
-    });
+    db.query(
+        `SELECT i.itemID, i.itemImg, i.itemDescription, u.userName, t.tagName 
+         FROM ItemTable as i 
+         INNER JOIN userTable as u ON i.userID = u.userID
+         INNER JOIN TagsTable AS t ON i.tagID = t.tagID`,
+        (err, result) => {
+            if (err) return res.status(500).json(err);
+            res.json(result);
+        }
+    );
 };
 
 // READ SINGLE ITEM

@@ -1,15 +1,38 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../../../stores/authStore';
 
 // Form data
 const username = ref('');
 const password = ref('');
 const showPassword = ref(false);
+const successMessage = ref(false);
+
+// Store et routeur
+const authStore = useAuthStore();
+const router = useRouter();
 
 // Handle login
-const handleLogin = () => {
-  console.log('Login attempt:', { username: username.value, password: password.value });
-  // Backend call will go here
+const handleLogin = async () => {
+  if (!username.value || !password.value) {
+    alert('Veuillez remplir tous les champs');
+    return;
+  }
+
+  const success = await authStore.login(username.value, password.value);
+  
+  if (success) {
+    // Affiche le message de succès
+    successMessage.value = true;
+    
+    // Redirige après 2 secondes
+    setTimeout(() => {
+      router.push('/');
+    }, 2000);
+  } else {
+    alert('Erreur: ' + authStore.error);
+  }
 };
 
 // Toggle password visibility
@@ -20,7 +43,14 @@ const togglePasswordVisibility = () => {
 
 <template>
   <div class="login-container">
-    <div class="login-card">
+    <!-- Message de succès -->
+    <div v-if="successMessage" class="success-message">
+      <p>✓ Connecté avec succès!</p>
+      <p>Redirection en cours...</p>
+    </div>
+
+    <!-- Card de login -->
+    <div v-else class="login-card">
       <div class="card-header">
         <h1 class="card-title">Maintenance System</h1>
         <p class="card-subtitle">Login to your account</p>
@@ -88,6 +118,38 @@ const togglePasswordVisibility = () => {
   background-color: #f5f5f5;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.success-message {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: slideUp 0.5s ease-out;
+}
+
+.success-message p {
+  font-size: 18px;
+  color: #333;
+  margin: 10px 0;
+}
+
+.success-message p:first-child {
+  font-size: 24px;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .login-card {

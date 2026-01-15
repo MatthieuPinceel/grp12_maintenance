@@ -1,5 +1,7 @@
 import express from "express";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
+    loginUser,
     createUser,
     getAllUsers,
     getUserById,
@@ -9,19 +11,19 @@ import {
 
 const router = express.Router();
 
-// CREATE
+// LOGIN
+router.post("/login", loginUser);
 router.post("/create", createUser);
 
-// READ ALL
-router.get("/", getAllUsers);
+// READ ALL (protégé)
+router.get("/", authMiddleware, getAllUsers);
 
-// READ ONE
-router.get("/:id", getUserById);
+// READ ONE (protégé)
+router.get("/:id", authMiddleware, getUserById);
 
-// UPDATE
-router.put("/:id", updateUser);
+// UPDATE (protégé)
+router.put("/:id", authMiddleware, updateUser);
 
-// DELETE
-router.delete("/:id", deleteUser);
-
+// DELETE (protégé)
+router.delete("/:id", authMiddleware, deleteUser);
 export default router; // 🔑 export default pour ES Modules
