@@ -52,7 +52,7 @@ const uploadImage = async () => {
       }
     );
 
-    message.value = '✓ Image uploadée avec succès!';
+    message.value = ' Image uploaded successfully!';
     messageType.value = 'success';
 
     // Reset form
@@ -85,17 +85,15 @@ const resetForm = () => {
   <div class="upload-container">
     <div class="upload-card">
       <div class="card-header">
-        <h2 class="card-title">📤 Ajouter une image</h2>
-        <p class="card-subtitle">Uploadez une nouvelle image de maintenance</p>
+        <h2 class="card-title">Add image</h2>
+        <p class="card-subtitle">Upload a new owl image</p>
       </div>
 
-      <!-- Message -->
       <div v-if="message" :class="['upload-message', messageType]">
         {{ message }}
       </div>
 
       <form @submit.prevent="uploadImage" class="upload-form">
-        <!-- File Input -->
         <div class="form-group">
           <label for="file-input" class="form-label">Image (JPG, PNG, GIF...)</label>
           <div class="file-input-wrapper" @click="triggerFileInput">
@@ -107,8 +105,8 @@ const resetForm = () => {
               class="file-input"
             />
             <div class="file-label">
-              <span v-if="!selectedFile" class="placeholder">
-                📁 Cliquez pour sélectionner une image
+              <span v-if="!selectedFile" class="placeholder"> 
+                Click for select image
               </span>
               <span v-else class="file-name">
                 ✓ {{ selectedFile.name }}
@@ -117,7 +115,6 @@ const resetForm = () => {
           </div>
         </div>
 
-        <!-- Description Input -->
         <div class="form-group">
           <label for="description" class="form-label">Description</label>
           <textarea
@@ -129,15 +126,14 @@ const resetForm = () => {
           />
         </div>
 
-        <!-- Tag Select -->
         <div class="form-group">
-          <label for="tag-select" class="form-label">Catégorie (Tag)</label>
+          <label for="tag-select" class="form-label">Tag</label>
           <select
             id="tag-select"
             v-model="tagID"
             class="form-input"
           >
-            <option value="">-- Sélectionner un tag --</option>
+            <option value="">-- Select a tag --</option>
             <option v-for="tag in tags" :key="tag.id" :value="tag.id">
               {{ tag.name }}
             </option>
@@ -151,8 +147,8 @@ const resetForm = () => {
             class="upload-btn"
             :disabled="loading || !selectedFile"
           >
-            <span v-if="!loading">📤 Uploader</span>
-            <span v-else>⏳ Upload en cours...</span>
+            <span v-if="!loading">uploaded</span>
+            <span v-else>Upload...</span>
           </button>
           <button
             type="button"
@@ -170,7 +166,7 @@ const resetForm = () => {
         <ul>
           <li>Taille max: 10 MB</li>
           <li>Format: JPG, PNG, GIF, WebP</li>
-          <li>L'image sera visible dans la galerie</li>
+          <li>Image will be visible in the gallery</li>
         </ul>
       </div>
     </div>
