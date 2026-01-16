@@ -6,6 +6,7 @@ import { onMounted, ref } from 'vue';
 const store = useItemStore();
 const photos = ref([]);
 
+// Call the store action to load all items and populate photos array
 const loadPhotos = async () => {
   await store.getAllItems();
   photos.value = store.itemList.map(item => ({

@@ -2,42 +2,76 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import axios from 'axios';
 
+/**
+ * Authentication Store (Pinia)
+ * 
+ * Manages user authentication state, JWT token handling, and session persistence.
+ * Provides centralized authentication state management across the application.
+ * 
+ * Features:
+ * - User login/logout functionality
+ * - JWT token storage and transmission
+ * - Session restoration from localStorage
+ * - Automatic axios header configuration
+ * 
+ * @module authStore
+ */
 export const useAuthStore = defineStore('auth', () => {
-  // State
-  const user = ref(null);
-  const token = ref(null);
-  const isAuthenticated = ref(false);
-  const loading = ref(false);
-  const error = ref(null);
+  // ============================================
+  // STATE: Core authentication data
+  // ============================================
+  
+  const user = ref(null); // Current authenticated user
+  const token = ref(null); // JWT token for authenticated requests
+  const isAuthenticated = ref(false); // Authentication status flag
+  const loading = ref(false); // Loading state for async operations
+  const error = ref(null); // Error message from failed operations
 
-  // Computed
-  const isLoggedIn = computed(() => isAuthenticated.value);
-  const currentUser = computed(() => user.value);
-  const authToken = computed(() => token.value);
+  // ============================================
+  // COMPUTED PROPERTIES: Derived state
+  // ============================================
 
-  // Actions
+  const isLoggedIn = computed(() => isAuthenticated.value); // Whether user is currently logged in
+  const currentUser = computed(() => user.value); // Current user object or null
+  const authToken = computed(() => token.value); // Current JWT token or null
+
+  // ============================================
+  // ACTIONS: Authentication operations
+  // ============================================
+
+  /**
+   * Authenticate user with username and password
+   * 
+   * Makes POST request to backend login endpoint, retrieves JWT token,
+   * stores credentials in localStorage, and configures axios for authenticated requests.
+   * 
+   * @async
+   * @param {string} username - User's login username
+   * @param {string} password - User's login password
+   * @returns {Promise<boolean>} True if authentication successful, false otherwise
+   */
   const login = async (username, password) => {
     loading.value = true;
     error.value = null;
 
     try {
-      // Appel au endpoint de login du backend
+      // Call backend login endpoint with credentials
       const response = await axios.post('http://localhost:3000/api/users/login', {
         userName: username,
         userPWD: password
       });
 
-      // Vérifie que la connexion a réussi
+      // Validate successful authentication response
       if (response.data.success) {
-        // Stocke les données utilisateur et le token
+        // Store authenticated user data and token
         user.value = response.data.user;
         token.value = response.data.token;
         isAuthenticated.value = true;
 
-        // Ajoute le token au header Authorization pour les futures requêtes
+        // Configure axios to include JWT token in all subsequent requests
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
-        // Stocke en localStorage
+        // Persist authentication state to localStorage for session restoration
         localStorage.setItem('authUser', JSON.stringify(response.data.user));
         localStorage.setItem('authToken', response.data.token);
         localStorage.setItem('authPassword', password);
@@ -45,7 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
         return true;
       }
     } catch (err) {
-      error.value = err.response?.data?.message || 'Erreur de connexion';
+      error.value = err.response?.data?.message || 'Authentication failed';
       isAuthenticated.value = false;
       return false;
     } finally {
@@ -53,6 +87,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  /**
+   * Clear authentication state and logout user
+   * 
+   * Removes user data, token, and authentication headers.
+   * Clears localStorage entries and resets axios default headers.
+   */
   const logout = () => {
     user.value = null;
     token.value = null;
@@ -60,11 +100,18 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
     localStorage.removeItem('authUser');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authPassword');
     delete axios.defaults.headers.common['Authorization'];
   };
 
+  /**
+   * Restore authentication from persisted localStorage data
+   * 
+   * Called on application initialization to restore user session
+   * from previous browser session if valid token exists.
+   * Restores axios authorization header automatically.
+   */
   const checkAuth = () => {
-    // Vérifie si l'utilisateur est déjà connecté (depuis localStorage)
     const storedUser = localStorage.getItem('authUser');
     const storedToken = localStorage.getItem('authToken');
     
@@ -73,25 +120,29 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = storedToken;
       isAuthenticated.value = true;
       
-      // Ajoute le token au header Authorization
+      // Restore axios Authorization header for authenticated requests
       axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
     }
   };
 
+  // ============================================
+  // EXPORTS: Public API
+  // ============================================
+
   return {
-    // State
+    // State exports
     user,
     token,
     isAuthenticated,
     loading,
     error,
     
-    // Computed
+    // Computed properties exports
     isLoggedIn,
     currentUser,
     authToken,
     
-    // Actions
+    // Action exports
     login,
     logout,
     checkAuth

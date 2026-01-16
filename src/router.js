@@ -6,7 +6,7 @@ import LoginView from './components/pages/login/login.vue'
 import GalleryView from './components/pages/gallery/gallery.vue'
 import UploadView from './components/components/upload/imageUpload.vue'
 
-// Définition des routes de l'application
+// Define application routes
 const routes = [
   { 
     path: '/', 
@@ -26,7 +26,7 @@ const routes = [
   }
 ]
 
-// Création du routeur avec historique du navigateur
+// Create and configure the Vue Router instance
 const router = createRouter({
   history: createWebHistory(),
   routes,
