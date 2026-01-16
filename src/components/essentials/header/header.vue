@@ -19,16 +19,12 @@ const isActive = (path) => {
 <template>
   <header class="header">
     <div class="header-content">
-      <h1 class="logo">Owl Viewer</h1>
-
+      <router-link to="/" class="logo"> Owl Viewer </router-link>
       <nav class="nav">
-        <router-link to="/gallery" class="nav-btn" :class="{ active: isActive('/gallery') }">
-          Gallery
-        </router-link>
         
-        <router-link  to="/login" class="nav-btn login-btn" :class="{ active: isActive('/login') }">
-          Login
-        </router-link>
+        <router-link to="/gallery" class="nav-btn"> Gallery </router-link>
+        <router-link to="/upload" class="nav-btn"> Upload </router-link>
+        <router-link to="/login" class="nav-btn login-btn"> Login </router-link>
       </nav>
     </div>
   </header>

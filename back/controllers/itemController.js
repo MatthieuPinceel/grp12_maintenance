@@ -69,6 +69,35 @@ export const updateItem = (req, res) => {
     });
 };
 
+// CREATE ITEM WITH IMAGE UPLOAD
+export const createItemWithUpload = (req, res) => {
+    const { itemDescription, tagID } = req.body;
+    const userID = req.user.userID;
+    
+    if (!req.file) {
+        return res.status(400).json({ message: "Image requise" });
+    }
+    
+    if (!itemDescription || !tagID) {
+        return res.status(400).json({ message: "Description et tag obligatoires" });
+    }
+
+    const itemImg = `/Images/uploads/${req.file.filename}`;
+
+    db.query(
+        "INSERT INTO ItemTable (itemImg, itemDescription, tagID, userID) VALUES (?, ?, ?, ?)",
+        [itemImg, itemDescription, tagID, userID],
+        (err, result) => {
+            if (err) return res.status(500).json(err);
+            res.json({ 
+                message: "Image uploadée avec succès", 
+                itemID: result.insertId, 
+                itemImg 
+            });
+        }
+    );
+};
+
 // DELETE ITEM
 export const deleteItem = (req, res) => {
     const itemID = req.params.id;
