@@ -15,6 +15,13 @@ const loadPhotos = async () => {
   }));
 };
 
+// Delete the photo from the store and backend
+const DeletePhoto = (index) => {
+  const photoToDelete = photos.value[index];
+  store.deleteItem(photoToDelete.src);
+  photos.value.splice(index, 1);
+};
+
 onMounted(() => {
   loadPhotos();
 });
@@ -23,23 +30,27 @@ onMounted(() => {
 
 <template>
   <div class="gallery-container">
-
     <div class="gallery-grid">
-      <photo 
-        v-for="(photo, index) in photos" 
-        :key="index"
-        :src="photo.src"
-        :alt="photo.alt"
-      />
+      <div v-for="(photo, index) in photos" :key="index" class="photo-wrapper">
+        <photo
+          :key="index"
+          :src="photo.src"
+          :alt="photo.alt"
+        />
+        <div class="delete-photo-btn-container">
+          <button class="delete-photo-btn" @click="DeletePhoto(index)">Delete</button>
+        </div>
+      </div>
     </div>
-
   </div>
 </template>
 
 <style scoped>
+
 .gallery-container {
+  margin-top: 20px;
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 50px ;
   padding: 0 20px;
 }
 
@@ -48,4 +59,48 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
+
+.photo-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Conteneur du bouton */
+.delete-photo-btn-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.5);
+  
+  transform: translateY(100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* Apparition au survol */
+.photo-wrapper:hover .delete-photo-btn-container {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Bouton */
+.delete-photo-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.delete-photo-btn:hover {
+  color: #ff4d4d;
+}
+
+
 </style>

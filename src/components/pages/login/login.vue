@@ -25,15 +25,11 @@ const handleLogin = async () => {
   if (success) {
     // Shows a succes message 
     successMessage.value = true;
-    
-    // if successful redirect after 2 seconds 
-    if (successMessage === true) {
-      setTimeout(() => {
-        router.push('/');
-      }, 2000);
-    } else {
-      alert('Error: ' + authStore.error);
-    }
+  
+    setTimeout(() => {
+      router.push('/');
+    }, 2000);
+
   }
 }
 
