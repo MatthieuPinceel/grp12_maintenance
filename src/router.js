@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Pages Vue - Application de Maintenance
 import HomeView from './components/pages/home/home.vue'
 import LoginView from './components/pages/login/login.vue'
+import SignupView from './components/pages/signup/signup.vue'
 import GalleryView from './components/pages/gallery/gallery.vue'
 import imageUploader from './components/pages/imageUploader/imageUploader.vue'
 
@@ -15,6 +16,10 @@ const routes = [
   { 
     path: '/login', 
     component: LoginView,
+  },
+  { 
+    path: '/signup', 
+    component: SignupView,
   },
   { 
     path: '/gallery', 

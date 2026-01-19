@@ -1,19 +1,14 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
+import { useAuthStore } from './../../../stores/authStore.js';
 
-// get the router and the current path
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
-// Navigates to the path
-const navigateTo = (path) => {
-  router.push(path);
-};
-
-// CHecks if the path is active
-const isActive = (path) => {
-  return route.path === path;
-};
+// Check if user is authenticated
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 </script>
 
 <template>
@@ -23,8 +18,8 @@ const isActive = (path) => {
       <nav class="nav">
         
         <router-link to="/gallery" class="nav-btn"> Gallery </router-link>
-        <router-link to="/upload" class="nav-btn"> Upload </router-link>
-        <router-link to="/login" class="nav-btn login-btn"> Login </router-link>
+        <router-link v-if="isAuthenticated" to="/upload" class="nav-btn"> Upload </router-link>
+        <router-link v-if="!isAuthenticated" to="/login" class="nav-btn login-btn"> Login </router-link>
       </nav>
     </div>
   </header>
@@ -99,5 +94,15 @@ const isActive = (path) => {
 
 .nav-btn:active {
   box-shadow: none;
+}
+
+.signup-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.signup-btn:hover {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 </style>
