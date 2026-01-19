@@ -35,7 +35,7 @@ const handleLogin = async () => {
       alert('Error: ' + authStore.error);
     }
   }
-};
+}
 
 // Toggle password visibility
 const togglePasswordVisibility = () => {
