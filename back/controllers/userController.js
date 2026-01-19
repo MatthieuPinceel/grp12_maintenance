@@ -2,15 +2,15 @@ import { db } from "../db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-// Secret pour les tokens JWT
+// Secret for JWT token
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
-// LOGIN USER - Vérifie les identifiants et génère un token JWT
+// LOGIN USER - Checks the credentials and generates a JWT token.
 export const loginUser = async (req, res) => {
     const { userName, userPWD } = req.body;
     
     if (!userName || !userPWD) {
-        return res.status(400).json({ message: "Identifiants manquants" });
+        return res.status(400).json({ message: "Missing credentials" });
     }
 
     try {
@@ -23,7 +23,7 @@ export const loginUser = async (req, res) => {
                 }
 
                 if (result.length ===0) {
-                    return res.status(401).json({ message: "Utilisateur introuvable."});
+                    return res.status(401).json({ message: "Can't find user."});
                 }
 
                 const user = result[0];
@@ -32,32 +32,32 @@ export const loginUser = async (req, res) => {
                 console.log()
 
                 if (!isMatch) {
-                    return res.status(401).json({ message: "Mot de passe incorrect" });
+                    return res.status(401).json({ message: "Password incorrect" });
                 }
 
 
-                // Génère un token JWT valide 24h
+                // Generates a JWT token that lasts for 24 hours
                 const token = jwt.sign(
                     { userID: user.userID, userName: user.userName },
                     JWT_SECRET,
                     { expiresIn: "24h" }
                 );
                 
-                // Retourne l'utilisateur ainsi que le token.
+                // Returns the user and the previously generated token
                 res.json({ 
                     success: true, 
-                    message: "Connexion réussie",
+                    message: "Connection successful",
                     user: user,
                     token: token
                 });
             }
         )
     } catch (err) {
-        res.status(500).json({ message: "Erreur survenue", err});
+        res.status(500).json({ message: "An error has occured", err});
     }
 };
 
-// CREATE USER (hashes the password before storing it in the database.)
+// CREATE USER - Checks if a user doesn't already exist with the provided username and hashes the password before storing it in the database.
 export const createUser = async (req, res) => {
     const { userName, userPWD } = req.body;
 
@@ -68,12 +68,12 @@ export const createUser = async (req, res) => {
             }
 
             if (result.length != 0) {
-                return res.status(400).json({ message: "Utilisateur avec le même pseudonyme existe déjà" })
+                return res.status(400).json({ message: "User with same username already exists" })
             }
         }
     )
     if (!userName || !userPWD) {
-        return res.status(400).json({ message: "Champs obligatoires manquants" });
+        return res.status(400).json({ message: "Mandatory field(s) missing" });
     }
 
     try {
@@ -92,7 +92,7 @@ export const createUser = async (req, res) => {
             }
         );
     } catch (err) {
-        res.status(500).json({ message: "Erreur serveur", err });
+        res.status(500).json({ message: "An error has occured", err });
     }
 };
 
@@ -109,7 +109,7 @@ export const getUserById = (req, res) => {
     const userID = req.params.id;
     db.query("SELECT * FROM UserTable WHERE userID = ?", [userID], (err, result) => {
         if (err) return res.status(500).json(err);
-        if (result.length === 0) return res.status(404).json({ message: "Utilisateur non trouvé" });
+        if (result.length === 0) return res.status(404).json({ message: "User not found" });
         res.json(result[0]);
     });
 };
@@ -125,14 +125,14 @@ export const updateUser = (req, res) => {
     if (userName) { updates.push("userName = ?"); params.push(userName); }
     if (userPWD) { updates.push("userPWD = ?"); params.push(userPWD); }
 
-    if (updates.length === 0) return res.status(400).json({ message: "Rien à mettre à jour" });
+    if (updates.length === 0) return res.status(400).json({ message: "Nothing to update" });
 
     const query = `UPDATE UserTable SET ${updates.join(", ")} WHERE userID = ?`;
     params.push(userID);
 
     db.query(query, params, (err) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: "Utilisateur mis à jour" });
+        res.json({ message: "User updated" });
     });
 };
 
@@ -141,6 +141,6 @@ export const deleteUser = (req, res) => {
     const userID = req.params.id;
     db.query("DELETE FROM UserTable WHERE userID = ?", [userID], (err) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: "Utilisateur supprimé" });
+        res.json({ message: "User deleted" });
     });
 };
