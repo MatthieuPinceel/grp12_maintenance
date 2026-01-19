@@ -15,7 +15,7 @@ const loadPhotos = async () => {
   }));
 };
 
-// Delete the photo from the store and backend
+// Delete the photo from the store and the backend
 const DeletePhoto = (index) => {
   const photoToDelete = photos.value[index];
   store.deleteItem(photoToDelete.src);
@@ -48,9 +48,8 @@ onMounted(() => {
 <style scoped>
 
 .gallery-container {
-  margin-top: 20px;
   max-width: 1200px;
-  margin: 50px ;
+  margin-top: 100px;
   padding: 0 20px;
 }
 
@@ -63,6 +62,14 @@ onMounted(() => {
 .photo-wrapper {
   position: relative;
   overflow: hidden;
+  height: 250px;
+}
+
+.photo-wrapper :deep(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Conteneur du bouton */
