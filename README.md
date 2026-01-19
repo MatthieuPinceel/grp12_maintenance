@@ -7,7 +7,7 @@ A full-stack web application for managing maintenance tasks, items, and user acc
 This is a comprehensive maintenance management system designed for efficient tracking and organization of maintenance operations. The application provides a user-friendly interface for managing users, maintenance items, and tagging systems.
 
 ### Developers
-
+- **Groupe** - 12
 - **Aurélien Fontaine** - Backend Development (Express.js, MySQL)
 - **Léothen Dusannier** - Frontend Development (Vue 3, Vite)
 
